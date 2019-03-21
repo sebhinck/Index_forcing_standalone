@@ -1,4 +1,4 @@
-#Index forcing
+# Index forcing
 
 The Python function `index_forcing` in `index_forcing.py` applies the same forcing as the PISM atmosphere model `index`.
 
