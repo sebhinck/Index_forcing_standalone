@@ -18,6 +18,6 @@ The function takes following arguments:
 
 The Script `run_index_forcing` sets all parameters and loads the data used by the `index_forcing` function, and calls it.
 To get in working the path `script_dir` needs to be set to the folder that contains the scripts.
-The netCDF-files and respective variable names must be defined to read the PD and LGM clamate states.
+The netCDF-files and respective variable names must be defined to read the PD and LGM climate states.
 
 The part where the actual data is read from the file might need to be adjusted to the format of input files.
