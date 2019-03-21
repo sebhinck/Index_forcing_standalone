@@ -10,17 +10,22 @@ sys.path.append(os.path.abspath(script_dir))
 
 import index_forcing as indf
 
+#Set time index of climate fields read from nc files
+#Might need to be adjusted to your input file
+time_idx = 1
+
 #Define NC files containing climate and topography information
-LGM_file = '/scratch/users/shinck/IceModelling/data/processed/NorthAmerica/Index/NGRIP_PI_LGM_forcing_120ky_50y_20km.nc'
+LGM_file = '/FILE/CONTAINING/LGM_CLIMATE.nc'
 LGM_precip_name = 'precip_1'
 LGM_temp_name = 'airtemp_1'
 LGM_topo_name = 'usurf_1'
 
-PD_file = '/scratch/users/shinck/IceModelling/data/processed/NorthAmerica/Index/NGRIP_PI_LGM_forcing_120ky_50y_20km.nc'
+PD_file = '/FILE/CONTAINING/PD_CLIMATE.nc'
 PD_precip_name = 'precip_0'
 PD_temp_name = 'airtemp_0'
 PD_topo_name = 'usurf_0'
 
+#If not set PD topography is used...
 current_file = None
 current_topo_name = 'usurf'
 
@@ -31,8 +36,6 @@ index = 0.5
 temp_lapse_rate_K_km = 5. #K/km
 precip_decay_rate_1_km = np.log(2.) #1/km
 precip_thresh_height_km = 5. #km
-
-time_idx = 1
 
 #Load LGM climate
 try:
