@@ -37,6 +37,11 @@ temp_lapse_rate_K_km = 5. #K/km
 precip_decay_rate_1_km = np.log(2.) #1/km
 precip_thresh_height_km = 5. #km
 
+
+####################################################################
+####################################################################
+#Loading the data
+
 #Load LGM climate
 try:
     with Dataset(LGM_file) as ncLGM:
@@ -65,6 +70,8 @@ except:
     print("No current topography found -> Using PD topography instead")
     h = h1.copy()
 
+####################################################################
+
 ###################################################################
 #Do not edit, taking care of correct units!
 temp_lapse_rate = temp_lapse_rate_K_km / 1.e3 #K/m
@@ -72,7 +79,10 @@ precip_decay_rate = precip_decay_rate_1_km / 1.e3 #1/m
 precip_thresh_height = precip_thresh_height_km * 1.e3 #m
 ###################################################################
 
+####################################################################
+####################################################################
 #Call actual function
+
 temp_cur, precip_cur = indf.index_forcing(precip0, 
                                           temp0, 
                                           h0,
