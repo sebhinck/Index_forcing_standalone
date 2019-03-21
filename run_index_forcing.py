@@ -12,25 +12,34 @@ import index_forcing as indf
 
 #Define NC files containing climate and topography information
 LGM_file = '/scratch/users/shinck/IceModelling/data/processed/NorthAmerica/Index/NGRIP_PI_LGM_forcing_120ky_50y_20km.nc'
+LGM_precip_name = 'precip_1'
+LGM_temp_name = 'airtemp_1'
+LGM_topo_name = 'usurf_1'
+
 PD_file = '/scratch/users/shinck/IceModelling/data/processed/NorthAmerica/Index/NGRIP_PI_LGM_forcing_120ky_50y_20km.nc'
+PD_precip_name = 'precip_0'
+PD_temp_name = 'airtemp_0'
+PD_topo_name = 'usurf_0'
+
 current_file = None
+current_topo_name = 'usurf'
 
 #Set index
 index = 0.5
 
 #Set other parameters
-temp_lapse_rate = 5. #K/km
-precip_decay_rate = np.log(2.) #1/km
-precip_thresh_height = 5. #km
+temp_lapse_rate_K_km = 5. #K/km
+precip_decay_rate_1_km = np.log(2.) #1/km
+precip_thresh_height_km = 5. #km
 
 time_idx = 1
 
 #Load LGM climate
 try:
     with Dataset(LGM_file) as ncLGM:
-        precip1 = ncLGM.variables['precip_1'][time_idx,:,:]
-        temp1 = ncLGM.variables['airtemp_1'][time_idx,:,:]
-        h1 = ncLGM.variables['usurf_1'][:,:]
+        precip1 = ncLGM.variables[LGM_precip_name][time_idx,:,:]
+        temp1 = ncLGM.variables[LGM_temp_name][time_idx,:,:]
+        h1 = ncLGM.variables[LGM_topo_name][:,:]
 except:
     print("Error reading LGM data!")
     raise
@@ -38,9 +47,9 @@ except:
 #Load PD climate
 try:
     with Dataset(PD_file) as ncPD:
-        precip0 = ncPD.variables['precip_0'][time_idx,:,:]
-        temp0 = ncPD.variables['airtemp_0'][time_idx,:,:]
-        h0 = ncPD.variables['usurf_0'][:,:]
+        precip0 = ncPD.variables[PD_precip_name][time_idx,:,:]
+        temp0 = ncPD.variables[PD_temp_name][time_idx,:,:]
+        h0 = ncPD.variables[PD_topo_name][:,:]
 except:
     print("Error reading PD data!")
     raise
@@ -48,19 +57,27 @@ except:
 #Load PD climate
 try:
     with Dataset(current_file) as ncCur:
-        h = ncCur.variables['topo'][:]
+        h = ncCur.variables[current_topo_name][:]
 except:
-    print("Error reading current topography! Use PD topography instead")
+    print("No current topography found -> Using PD topography instead")
     h = h1.copy()
 
+###################################################################
+#Do not edit, taking care of correct units!
+temp_lapse_rate = temp_lapse_rate_K_km / 1.e3 #K/m
+precip_decay_rate = precip_decay_rate_1_km / 1.e3 #1/m
+precip_thresh_height = precip_thresh_height_km * 1.e3 #m
+###################################################################
 
+#Call actual function
 temp_cur, precip_cur = indf.index_forcing(precip0, 
                                           temp0, 
+                                          h0,
                                           precip1, 
                                           temp1, 
+                                          h1,
                                           h, 
                                           index, 
                                           temp_lapse_rate, 
                                           precip_decay_rate, 
                                           precip_thresh_height)
-
